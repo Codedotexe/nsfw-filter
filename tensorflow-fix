@@ -1,0 +1,19 @@
+#!/bin/sh
+
+
+TFJS_FILE='node_modules/@tensorflow/tfjs/dist/tf.js'
+
+if ! [ -f "$TFJS_FILE" ]; then
+	echo "The file '$TFJS_FILE' does not exist, make sure you are located in the project folder and that you ran 'npm ci' prior" >&2
+	exit 1
+fi
+
+# Perform the fix
+# The fix just sets this specific flag in the TFJS file from false to true
+if sed -Ei 's/(failIfMajorPerformanceCaveat): false(,?)/\1: true\2/' "$TFJS_FILE"; then
+	echo 'The fix was performed without errors'
+else
+	echo 'An error occured while performing the fix' >&2
+	exit 1
+fi
+
